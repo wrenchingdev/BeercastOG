@@ -2,18 +2,53 @@
 <html style="opacity: 0;">
 
 <head>
-    <title></title>
+    <title>Beercast.org</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- if using browserify, uncomment the line below -->
-    <!-- <link rel="stylesheet" type="text/css" href="./dist/style.css"> -->
+    <link rel="stylesheet" type="text/css" href="./dist/style.css">
 </head>
 
 <body>
-    <div class="container"></div>
-    <!-- if using loader, use the line below -->
-    <script type="text/javascript" src="./bower_components/Loader/loader.js" id="loaderjs" data-app="./js/app.js"></script>
-    <!-- otherwise if using browserify, comment out the above line and uncomment the following line -->
-    <!-- <script type="text/javascript" src="./dist/app-browserify.js"></script> -->
+    <div class="container">
+        <div class="home">
+            <header>
+                <img src="./images/beerMe.svg">
+                <h1>Beercast</h1>
+                <div class="navigation">
+                    <div class="link1 menu">Menu</div>
+                    <div class="link2">Home</div>
+                    <div class="link3">Search</div>
+                    <div class="link4">Contact</div>
+                    <div class="link5">Sign In/ Register</div>
+                </div>
+            </header>
+
+            <h1>Title</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        </div>
+        <br>
+        <div class="register">
+            <div class="signin">
+                <form id="signInForm">
+                    <h4>Sign In</h4>
+                    <input type="email" name="email" placeholder="Email">
+                    <input type="password" name="password" placeholder="Password">
+                    <input type="submit" name="submit">
+                </form>
+                <form id="signInForm">
+                    <h4>Register</h4>
+                    <input type="email" name="email" placeholder="Email">
+                    <input type="password" name="password1" placeholder="Password">
+                    <input type="password" name="password2" placeholder="Password">
+                    <input type="submit" name="submit">
+                </form>
+            </div>
+        </div>
+        <br>
+        <div class="dashboard">
+        </div>
+        <br>
+    </div>
+    <script type="text/javascript" src="./dist/app-browserify.js"></script>
 </body>
 
 </html>
