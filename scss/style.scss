@@ -78,3 +78,49 @@ img {max-width:100%;}
 body {
     transition: opacity .25s ease;
 }
+
+/**
+ * MY STYLES
+ */
+
+body {
+    .container {
+        .home {
+            header {
+                background-color: lightblue;
+                img {
+                    max-width: 150px;
+                }
+                h1 {
+                    font-size: 4em;
+                    display: inline-block;
+                    position: absolute;
+                    left: 175px;
+                    top: 40px;
+                }
+                .navigation {
+                    display: inline-block;
+                    position: absolute;
+                    right: 30px;
+                    top: 15px;
+                    .nav {
+                        display: inline-block;
+                        font-size: 1.5em;
+                    }
+                }
+                .searchBar {
+                    display: inline-block;
+                    span {
+                        position: absolute;
+                        right: 1em;
+                        top: 6em;
+                        width: 21em;
+                        input[type="text"] {
+                            width: 16em;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
