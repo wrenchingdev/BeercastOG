@@ -83,13 +83,17 @@ body {
  * MY STYLES
  */
 
+$fontColor: #A66641;
+$iconColor: #593622;
+$titleColor: #A66641;
 body {
     .container {
         .home {
             header {
-                background-color: lightblue;
-                img {
-                    max-width: 150px;
+                background-color: #D99C52;
+                i {
+                    font-size: 8.5em;
+                    color: $iconColor;
                 }
                 h1 {
                     font-size: 4em;
@@ -97,15 +101,18 @@ body {
                     position: absolute;
                     left: 175px;
                     top: 40px;
+                    color: $iconColor;
                 }
                 .navigation {
                     display: inline-block;
                     position: absolute;
-                    right: 30px;
+                    right: 35px;
                     top: 15px;
                     .nav {
                         display: inline-block;
                         font-size: 1.5em;
+                        color: $iconColor;
+                        padding: 0.2em;
                     }
                 }
                 .searchBar {
@@ -114,13 +121,24 @@ body {
                         position: absolute;
                         right: 1em;
                         top: 6em;
-                        width: 21em;
+                        width: 19em;
                         input[type="text"] {
-                            width: 16em;
+                            width: 14em;
                         }
                     }
                 }
             }
+            h1 {
+                color: $iconColor;
+            }
         }
     }
+}
+
+img {
+    max-width: 150px;
+}
+
+header {
+    background-color: lightblue;
 }
