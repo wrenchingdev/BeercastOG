@@ -214,6 +214,7 @@ body {
                             width: 14em;
                         }
                         input[type="submit"]{
+                            opacity: 0;
                         }
                         i {
                             position: absolute;
@@ -225,6 +226,9 @@ body {
             }
             h1 {
                 color: $iconColor;
+            }
+            p {
+                font-style: Palatino, serif;
             }
         }
     }
