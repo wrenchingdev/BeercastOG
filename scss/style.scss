@@ -1,5 +1,6 @@
 @import "../bower_components/normalize-scss/_normalize.scss";
 @import "../bower_components/typeplate-starter-kit/css/_typeplate.scss";
+@import "../bower_components/font-awesome-sass/assets/stylesheets/font-awesome.scss";
 @import "./mixins.scss";
 
 /**
@@ -175,61 +176,59 @@ body {
 
 body {
     .container {
-        .home {
-            header {
-                background-color: #D99C52;
-                margin-bottom: 5em;
-                i {
-                    font-size: 2.5em;
-                    color: $iconColor;
-                }
-                h1 {
-                    font-size: 3em;
-                    display: inline-block;
-                    position: absolute;
-                    left: 60px;
-                    top: 0px;
-                    color: $iconColor;
-                }
-                .navigation {
-                    display: inline-block;
-                    position: absolute;
-                    right: 35px;
-                    top: 0px;
-                    .nav {
-                        display: inline-block;
-                        font-size: 1.5em;
-                        color: $iconColor;
-                        padding: 0.2em;
-                    }
-                }
-                .searchBar {
-                    display: inline-block;
-                    span {
-                        position: absolute;
-                        right: 35em;
-                        top: 1em;
-                        width: 19em;
-                        input[type="text"] {
-                            width: 14em;
-                        }
-                        input[type="submit"]{
-                            opacity: 0;
-                        }
-                        i {
-                            position: absolute;
-                            right: 2em;
-                            font-size: 1.5em;
-                        }
-                    }
-                }
-            }
-            h1 {
+        header {
+            background-color: #D99C52;
+            margin-bottom: 5em;
+            i {
+                font-size: 2.5em;
                 color: $iconColor;
             }
-            p {
-                font-style: Palatino, serif;
+            h1 {
+                font-size: 3em;
+                display: inline-block;
+                position: absolute;
+                left: 60px;
+                top: 0px;
+                color: $iconColor;
             }
+            .navigation {
+                display: inline-block;
+                position: absolute;
+                right: 35px;
+                top: 0px;
+                .nav {
+                    display: inline-block;
+                    font-size: 1.5em;
+                    color: $iconColor;
+                    padding: 0.2em;
+                }
+            }
+            .searchBar {
+                display: inline-block;
+                span {
+                    position: absolute;
+                    left: 15em;
+                    top: 1em;
+                    width: 19em;
+                    input[type="text"] {
+                        width: 14em;
+                    }
+                    input[type="submit"]{
+                        opacity: 0;
+                    }
+                    i {
+                        position: absolute;
+                        right: 2em;
+                        font-size: 1.5em;
+                    }
+                }
+            }
+        }
+        h1 {
+            color: $iconColor;
+        }
+        p {
+            font-style: Palatino, serif;
         }
     }
 }

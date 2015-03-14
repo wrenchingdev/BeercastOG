@@ -27,7 +27,8 @@ function app(){
 
         // other stuff
         {url: "./bower_components/pace/pace.min.js"},
-        {url: "./js/TemplateView.js"}
+        {url: "./js/TemplateView.js"},
+        {url: "./js/beercast.js"}
     ).then(function(){
         // if turning on JSnoX, uncommment the following line
         // window.d = jsnox(React);
@@ -36,6 +37,9 @@ function app(){
 
         document.querySelector("html").style.opacity = 1;
         // start app?
+
+        var route = new BeerRouter();
+
     })
 
 }
