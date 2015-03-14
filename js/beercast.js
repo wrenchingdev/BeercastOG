@@ -13,12 +13,9 @@
             this.tellMe = new Backbone.DetailsView();
             this.looking = new Backbone.SearchView();
 
-            this.whereAmI = new Backbone.GeoWeatherModel({
-                //==============================================
-                access_token: "Already reset, dont bother with any cached keys"
-                    //access_token: **********************************
-                    //==============================================
-            })
+            this.whereAmI = new Backbone.GeoModel();
+
+            // this.whereAmI = new Backbone.GeoWeatherModel()
 
             Backbone.history.start();
         },
@@ -31,10 +28,9 @@
         },
         home: function() {
             this.house.render();
-            this.whereAmI.geofetch().then(function(data) {
-                data;
-                console.log(data);
-                this.data = data;
+            this.whereAmI.geo()
+                .then(function(thegeodata){
+                console.log(thegeodata)
             })
         },
         about: function() {
@@ -147,28 +143,13 @@
                 maximumAge: 10 * 60 * 1000 //600s, or 10m
             })
             return x;
-        },
-        geofetch: function() {
-            var self = this;
-            return this.geo().then(function(position) {
-                return self.fetch()
-            })
-        }
-    });
-
-    Backbone.GeoWeatherModel = Backbone.GeoModel.extend({
-
-        url: function() {
-            var theWeather = [
-                "https://api.forecast.io/forecast/",
-                this.get('access_token'),
-                "/",
-                this.get("position").coords.latitude + ',' + this.get("position").coords.longitude,
-                "?callback=?"
-            ].join('')
-
-            return theWeather
-        }
+        }//,
+        // geofetch: function() {
+        //     var self = this;
+        //     return this.geo().then(function(position) {
+        //         return self.fetch()
+        //     })
+        // }
     });
 
     // Collections
