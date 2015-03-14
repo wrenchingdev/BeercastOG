@@ -15,7 +15,7 @@
 
             this.whereAmI = new Backbone.GeoWeatherModel({
                 //==============================================
-                //access_token:
+                access_token: "846f5b20206c98a05ad9ebc118cda38a"
                     //access_token: **********************************
                     //==============================================
             })
