@@ -1,21 +1,18 @@
-        <div class="search">
-            <header>
-                <img src="./images/beer.svg">
-                <h1>Beercast Search</h1>
-                <div class="searchBar">
-                    <input type="text" name="searchBar" placeholder="Search Breweries..">
-                    <input type="submit" name="submit">
-                </div>
-                <div class="navigation">
-                    <div class="link1 menu">Menu</div>
-                    <div class="link2">Home</div>
-                    <div class="link3">Search</div>
-                    <div class="link4">Contact</div>
-                </div>
-            </header>
-            <div class="searchResults">
-                <h2>Name</h2>
-                <h4>Address</h4>
-                <%= images.medium %>
-            </div>
-        </div>
+<header>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />`
+    <i class="fa fa-beer"></i>
+    <h1>Beercast</h1>
+    <div class="searchBar">
+        <form id="submitForm">
+            <span><input type="text" name="searchBar" placeholder="Search for Breweries near...">
+                    <input type="submit" name="submit" name="submit">
+                    <i class="fa fa-search"></i>
+                    </span>
+        </form>
+    </div>
+    <ul class="navigation">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#search">Search</a></li>
+        <li><a href="#about">About</a></li>
+    </ul>
+</header>
