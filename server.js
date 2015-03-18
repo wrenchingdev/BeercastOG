@@ -34,6 +34,17 @@ function startServer() {
     // examples:
     // proxify('/yummly/recipes', 'http://api.yummly.com/v1/api/recipes');
     proxify('/brewerydb/search', 'https://api.brewerydb.com/v2/search/geo/point');
+    app.get('/forecast/:key/:lat/:long', function(req, res){
+        var url = [
+            "https://api.forecast.io/forecast/",
+            req.params.key,
+            "/",
+            req.params.lat,
+            ",",
+            req.params.long
+        ].join('')
+        req.pipe(request(url)).pipe(res);
+    })
 
     // all environments
     app.set('port', process.argv[3] || process.env.PORT || 3000);

@@ -159,6 +159,7 @@ button.loading {
 $fontColor: #A66641;
 $iconColor: #593622;
 $titleColor: #A66641;
+$backgroundColor: #D99C52;
 
 /**
  * GENERAL
@@ -177,7 +178,7 @@ body {
 body {
     .container {
         header {
-            background-color: #D99C52;
+            background-color: $backgroundColor;
             margin-bottom: 5em;
             i {
                 font-size: 2.5em;
@@ -232,6 +233,10 @@ body {
             font-style: Palatino, serif;
         }
     }
+}
+
+.results {
+    border: 1px solid
 }
 
 img {
