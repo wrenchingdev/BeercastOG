@@ -1,0 +1,29 @@
+    <% console.log(options.forecast)%>
+    <section class="currentDesc">
+        <h2>Currently</h2>
+        <div>
+            <h3><%= options.forecast.get('currently').temperature %></h3>
+            <h4><%= options.forecast.get('currently').summary %></h4>
+            <h4>Feels like <%= options.forecast.get('currently').apparentTemperature %></h4>
+        </div>
+    </section>
+    <section class="hourlyDesc">
+        <h2>Next Hour</h2>
+        <div>
+            <h4><%= options.forecast.get('hourly').data[0].summary %></h4>
+            <h4><%= options.forecast.get('hourly').temperature %></h4>
+        </div>
+    </section>
+    <section class="24hrDesc">
+        <h2>Next 24 Hours</h2>
+        <div>
+            <h4><%= options.forecast.get('hourly').summary %></h4>
+        </div>
+    </section>
+    <section class="weekDesc">
+        <h2>Next 7 Days</h2>
+        <div>
+            <h4><%= options.forecast.get('daily').summary %></h4>
+            <h4><%= options.forecast.get('daily').temperature %></h4>
+        </div>
+    </section>

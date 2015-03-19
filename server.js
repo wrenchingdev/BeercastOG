@@ -34,6 +34,7 @@ function startServer() {
     // examples:
     // proxify('/yummly/recipes', 'http://api.yummly.com/v1/api/recipes');
     proxify('/brewerydb/search', 'https://api.brewerydb.com/v2/search/geo/point');
+    proxify('google/search', 'https://maps.googleapis.com/maps/api/geocode/json');
     app.get('/forecast/:key/:lat/:long', function(req, res){
         var url = [
             "https://api.forecast.io/forecast/",

@@ -146,6 +146,29 @@ img {
 body {
     transition: opacity .25s ease;
 }
+
+.beer-cast-icon {
+        position: relative;
+        width: 64px;
+        .beer-ike {
+            color: rgba(209, 102, 74, .8);
+            @include stroke-me;
+        }
+        .cloud-ike {
+            position: absolute;
+            color: skyblue;
+            top: 12px;
+            left: 30px;
+            @include stroke-me;
+        }
+        .sun-ike {
+            position: absolute;
+            color: palegoldenrod;
+            top: 18px;
+            left: 35px;
+        }
+    }
+
 /**
  * MY STYLES
  */
@@ -154,16 +177,12 @@ body {
     .container {
         header {
             background-color: $backgroundColor;
-            margin-bottom: 5em;
-            i {
-                font-size: 2.5em;
-                color: $iconColor;
-            }
+            margin-bottom: 1em;
             h1 {
                 font-size: 3em;
                 display: inline-block;
                 position: absolute;
-                left: 60px;
+                left: 70px;
                 top: 0.2em;
                 color: $iconColor;
             }
@@ -213,29 +232,9 @@ body {
     border: 1px solid
 }
 img {
-    max-width: 150px;
+    max-width: 100%;
 }
-header {
+.weather {
     background-color: lightblue;
-    .beer-cast-icon {
-        position: relative;
-        width: 64px;
-        .beer-ike {
-            color: rgba(209, 102, 74, .8);
-            @include stroke-me;
-        }
-        .cloud-ike {
-            position: absolute;
-            color: skyblue;
-            top: 12px;
-            left: 25px;
-            @include stroke-me;
-        }
-        .sun-ike {
-            position: absolute;
-            color: palegoldenrod;
-            top: 18px;
-            left: 30px;
-        }
-    }
+
 }

@@ -4,9 +4,6 @@
             <a href="#details/<%= r.get('id') %>">
                 <h4><%= r.get('brewery').name %></h4>
                 <h5><%= r.get('streetAddress') %></h5>
-                console.log(r.get('brewery').images);
-                <img src="<%= r.get('brewery').images.medium %>">
-                <% debugger %>
             </a>
         </div>
     <% }) %>

@@ -1,7 +1,24 @@
-<div>
+<div class="brewery">
+    <div class="image">
+        <%
+        var imageUrl = "../images/craft_beer-3.jpg";
+        if(data.get('brewery').images){
+            imageUrl = data.get('brewery').images.large
+        }
+        %>
+        <% if(imageUrl){ %>
+            <div>
+                <img src="<%= imageUrl %>">
+            </div>
+        <% } %>
+    </div>
     <H1><%= data.get('brewery').name %></H1>
-    <h4><%= data.get('streetAddress') %></h4>
-    <h4><%= data.get('website') %></h4>
-
-    <% debugger %>
+    <div class="description">
+        <h4>Established: <%= data.get('brewery').established %></h4>
+        <h4>Address: <%= data.get('streetAddress') %></h4>
+        <h4>Website: <a href="<%= data.get('website') %>"><%= data.get('website') %></a></h4>
+        <h4><%= data.get('brewery').description %></h4>
+    </div>
+</div>
+<div class="weather">
 </div>
