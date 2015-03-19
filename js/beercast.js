@@ -97,7 +97,6 @@
         view: "header",
         events: {
             "submit #submitForm": "submit",
-            "click .enter": "search",
             "click .home": "home",
             "click .search": "search",
             "click .contact": "contact"
@@ -110,16 +109,20 @@
             })
         },
 
-        searchNear: function(e) {
-            e.preventDefault();
-            // query: this.el.querySelector('input[class="enter"]')
-            window.location.hash = "searchNear"
-        }
     });
 
     Backbone.HomeView = Backbone.TemplateView.extend({
         el: ".body",
-        view: "home"
+        view: "home",
+        events: {
+            "click .enter": "search"
+        },
+
+        search: function(e) {
+            e.preventDefault();
+            input: this.el.querySelector('input[class="enter"]')
+            window.location.hash = "search"
+        }
     });
 
     Backbone.SearchView = Backbone.TemplateView.extend({
