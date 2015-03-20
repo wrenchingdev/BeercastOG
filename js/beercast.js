@@ -21,9 +21,13 @@
 
             this.search = new Backbone.SearchView();
 
+            // this.geo().then(function(d){
+            //     console.log(d);
+            // })
+
             this.google = new Backbone.searchGoogle();
             this.google.fetch().then(function(d) {
-                console.log(d);
+                console.log(d.results[0].geometry.location);
             });
 
             this.header = new Backbone.HeaderView();
@@ -52,7 +56,7 @@
             'details/:id': 'details',
             // '/brewery/:id/beers': 'beers',
             'search': 'search',
-            'searchNear': 'search',
+            'searchNear': 'searchNear',
             '*default': 'home'
         },
         home: function() {
@@ -66,6 +70,11 @@
             this.about.render();
         },
         search: function(thegeodata) {
+            this.isBrewCollection.then(function(d) {
+                this.search.render();
+            }.bind(this))
+        },
+        searchNear: function(d) {
             this.isBrewCollection.then(function(d) {
                 this.search.render();
             }.bind(this))
@@ -90,9 +99,7 @@
                     var onDom= document.querySelector('.weather')
                     this.weather.el = this.details.el.querySelector('.weather')
                     this.weather.render();
-
                 }.bind(this))
-
             }.bind(this))
         }
     });
@@ -105,7 +112,7 @@
         events: {
             "submit #submitForm": "submit",
             "click .home": "home",
-            "click .search": "search",
+            "click .search": "searchNear",
             "click .contact": "contact"
         },
 
@@ -119,7 +126,7 @@
     });
 
     Backbone.HomeView = Backbone.TemplateView.extend({
-        el: ".body",
+        el: ".main",
         view: "home",
         events: {
             "click .enter": "search"
@@ -133,22 +140,22 @@
     });
 
     Backbone.AboutView = Backbone.TemplateView.extend({
-        el: ".body",
+        el: ".main",
         view: "about"
     });
 
     Backbone.SearchView = Backbone.TemplateView.extend({
-        el: ".body",
+        el: ".main",
         view: "search"
     });
 
     Backbone.SearchNearView = Backbone.TemplateView.extend({
-        el: ".body",
+        el: ".main",
         view: "search"
     });
 
     Backbone.DetailedView = Backbone.TemplateView.extend({
-        el: ".body",
+        el: ".main",
         view: "details"
     });
 
@@ -233,10 +240,10 @@
                 '?key=',
                 this.breweryDBKey,
                 "&lat=",
-                // this.lat,
+                // data.results[0].geometry.location.lat,
                 "29.811903",
                 "&lng=",
-                // this.long,
+                // d.results[0].geometry.location.long,
                 "-95.467471"
             ].join('')
         },
