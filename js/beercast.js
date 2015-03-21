@@ -25,35 +25,37 @@
                 forecast: this.forecastModel
             });
 
+            // Search Near View
+            this.searchNear = new Backbone.SearchNearView();
             // Search View
             this.search = new Backbone.SearchView();
-            // Search Near View
-            this.searchNear = new Backbone.SearchView();
 
             // // Google maps api to fetch lat&long for specific city input
             // this.google = new Backbone.searchGoogle();
             // this.google.fetch().then(function(d) {});
 
 
-            //==============================================
             // Creating new instance of geomodel
             this.whereAmI = new Backbone.GeoModel();
 
+            //==============================================
             // Creating a brewery collection promise
             this.isBrewCollection = $.Deferred();
             // Calling geo function from Geomodel
             this.whereAmI.geo().then(function(latLong) {
-                debugger;
+
                 //latLong exists, now need to pass over to fetch.
                 // TODO: add in geolocation (radius, too)
                 this.brewCollection = new Backbone.Brewery_Collection(latLong)
+                console.log(this.brewCollection)
                     // attach brew collection to SearchView (search)
                 this.search.collection = this.brewCollection;
+                this.searchNear.collection = this.brewCollection;
                 // once brew collection pulls in breweries nearby, resolve
-                debugger;
+
                 this.brewCollection.fetch(latLong).then(function() {
-                    debugger;
-                    this.isBrewCollection.resolve(latLong);
+
+                    this.isBrewCollection.resolve();
                 }.bind(this))
             }.bind(this));
             //=====================================================
@@ -72,7 +74,7 @@
             'details/:id': 'details',
             // '/brewery/:id/beers': 'beers',
             'search': 'search',
-            'searchNear': 'search',
+            'searchNear': 'searchNear',
             '*default': 'home'
         },
         home: function() {
@@ -83,10 +85,16 @@
             this.about.render();
         },
         search: function(latLong) {
-            this.search.render();
+            console.log(this.isBrewCollection)
+            this.isBrewCollection.then(function() {
+                this.search.render();
+            }.bind(this))
         },
         searchNear: function(latLong) {
-            this.searchNear.render();
+            console.log(this.isBrewCollection)
+            this.isBrewCollection.then(function() {
+                this.searchNear.render();
+            }.bind(this))
         },
         details: function(id) {
             var self = this;
@@ -141,10 +149,9 @@
             "click .enter": "searchNear"
         },
 
-        search: function(e) {
+        searchNear: function(e) {
             e.preventDefault();
-            input: this.el.querySelector('input[class="enter"]')
-            window.location.hash = "search"
+            window.location.hash = "searchNear"
         }
     });
 
@@ -223,7 +230,7 @@
             var self = this;
 
             navigator.geolocation.getCurrentPosition(function(position) {
-                    debugger;
+
                     x.resolve({
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
@@ -246,16 +253,20 @@
     Backbone.Brewery_Collection = Backbone.Collection.extend({
         model: Backbone.Brewery,
         breweryDBKey: "3c52864e7f15341096384bb8a92262da",
+        initialize: function(options) {
+            this.options = options;
+        },
         url: function() {
-            debugger;
+
             return [
                 '/brewerydb/search',
                 '?key=',
                 this.breweryDBKey,
                 "&lat=",
-                this.models[0].get('latitude'),
+                this.options.latitude,
                 "&lng=",
-                this.models[0].get('longitude')
+                this.options.longitude,
+                "&radius=40"
             ].join('')
         },
         parse: function(data) {
