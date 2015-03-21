@@ -52,11 +52,7 @@
                 this.search.collection = this.brewCollection;
                 this.searchNear.collection = this.brewCollection;
                 // once brew collection pulls in breweries nearby, resolve
-
-                this.brewCollection.fetch(latLong).then(function() {
-
-                    this.isBrewCollection.resolve();
-                }.bind(this))
+                this.isBrewCollection.resolve();
             }.bind(this));
             //=====================================================
 
@@ -91,9 +87,10 @@
             }.bind(this))
         },
         searchNear: function(latLong) {
-            console.log(this.isBrewCollection)
             this.isBrewCollection.then(function() {
-                this.searchNear.render();
+                this.brewCollection.fetch(latLong).then(function() {
+                    this.searchNear.render();
+                }.bind(this))
             }.bind(this))
         },
         details: function(id) {

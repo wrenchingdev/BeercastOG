@@ -19,6 +19,8 @@ function startServer() {
     // adds a new rule to proxy a localUrl -> webUrl
     // i.e. proxify ('/my/server/google', 'http://google.com/')
     function proxify(localUrl, webUrl){
+        console.log(localUrl)
+        console.log(webUrl)
         app.get(localUrl, function(req, res) {
             var url = [
                 webUrl,
