@@ -24,9 +24,10 @@
                 this.options = options || {};
 
                 this.model && this.model.on("change", this.render.bind(this));
-                this.collection && this.collection.on("sync", this.render.bind(this));
+                this.collection && this.collection.on("add create sync", this.render.bind(this));
             },
             render: function() {
+                // console.log('renering')
                 var self = this;
                 this.loadTemplate(this.options.view || this.view).then(function(fn) {
                     var d = self.model || self.collection;
