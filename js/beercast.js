@@ -30,10 +30,12 @@
             // Search View
             this.search = new Backbone.SearchView();
 
-            // // Google maps api to fetch lat&long for specific city input
-            // this.google = new Backbone.searchGoogle();
-            // this.google.fetch().then(function(d) {});
+            // New instance of google search model
+            this.google = new Backbone.searchGoogle();
 
+            // this.searchBrewCollection.fetch().then(function(results) {
+            //     console.log(results)
+            // }.bind(this))
 
             // Creating new instance of geomodel
             this.whereAmI = new Backbone.GeoModel();
@@ -47,9 +49,8 @@
                 //latLong exists, now need to pass over to fetch.
                 // TODO: add in geolocation (radius, too)
                 this.brewCollection = new Backbone.Brewery_Collection(latLong)
-                console.log(this.brewCollection)
-                    // attach brew collection to SearchView (search)
-                this.search.collection = this.brewCollection;
+                    // console.log(this.brewCollection)
+                    // attach SearchNearView to brew collection
                 this.searchNear.collection = this.brewCollection;
                 // once brew collection pulls in breweries nearby, resolve
                 this.isBrewCollection.resolve();
@@ -69,7 +70,7 @@
             'about': 'about',
             'details/:id': 'details',
             // '/brewery/:id/beers': 'beers',
-            'search': 'search',
+            'search/': 'search',
             'searchNear': 'searchNear',
             '*default': 'home'
         },
@@ -79,12 +80,25 @@
         },
         about: function() {
             this.about.render();
+            //
+            //
         },
-        search: function(latLong) {
-            console.log(this.isBrewCollection)
-            this.isBrewCollection.then(function() {
+        search: function(terms) {
+            this.google.fetch().then(function(data) {
+                console.log('Google Fetch done!')
+                console.log('lat', data.results[0].geometry.location.lat)
+                console.log('lng', data.results[0].geometry.location.lng)
+                this.searchBrewCollection = new Backbone.Brewery_Collection({
+                    latitude: data.results[0].geometry.location.lat,
+                    longitude: data.results[0].geometry.location.lng
+                })
+                // attach SearchView to searchBrewCollection (Brewery_Collection)
+                this.search.collection = this.searchBrewCollection;
+                this.searchBrewCollection.fetch().then(function(data) {
+                    console.log(data)
+                })
                 this.search.render();
-            }.bind(this))
+            })
         },
         searchNear: function(latLong) {
             this.isBrewCollection.then(function() {
@@ -136,7 +150,6 @@
                 query: this.el.querySelector('input[name="searchBar"]').value
             })
         },
-
     });
 
     Backbone.HomeView = Backbone.TemplateView.extend({
@@ -184,14 +197,15 @@
             return [
                 "https://maps.googleapis.com/maps/api/geocode/json", //"google/search",
                 "?address=",
-                "houston",
+                "austin",
                 // "1600+Amphitheatre+Parkway,+Mountain+View,+CA",
                 "&key=",
                 "AIzaSyCtv4tcMsxiOedDJZexyPDOk8wda4OUNCY"
             ].join('')
         },
         parse: function(data) {
-            return data.data
+            console.log(data.results[0].geometry.location)
+            return data.results[0].geometry.location
         }
     });
 
@@ -267,7 +281,8 @@
             ].join('')
         },
         parse: function(data) {
-            return data.data
+            console.log(data)
+            return data
         }
     });
 
