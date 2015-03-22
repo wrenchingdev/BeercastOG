@@ -30,6 +30,7 @@
             // Search View
             this.search = new Backbone.SearchView();
 
+            debugger;
             // New instance of google search model
             this.google = new Backbone.searchGoogle();
 
@@ -70,13 +71,14 @@
             'about': 'about',
             'details/:id': 'details',
             // '/brewery/:id/beers': 'beers',
-            'search/': 'search',
+            'search': 'search',
             'searchNear': 'searchNear',
-            '*default': 'home'
+            '*default': 'search'//'home'
         },
         home: function() {
-            var self = this;
-            self.home.render();
+            this.home.render();
+            //
+            //
         },
         about: function() {
             this.about.render();
@@ -92,6 +94,7 @@
                     latitude: data.results[0].geometry.location.lat,
                     longitude: data.results[0].geometry.location.lng
                 })
+                debugger;
                 // attach SearchView to searchBrewCollection (Brewery_Collection)
                 this.search.collection = this.searchBrewCollection;
                 this.searchBrewCollection.fetch().then(function(data) {
@@ -132,7 +135,9 @@
         }
     });
 
-    // Views
+    /**
+     * Views
+     */
 
     Backbone.HeaderView = Backbone.TemplateView.extend({
         el: ".header",
@@ -190,7 +195,9 @@
         view: "weather"
     });
 
-    // Models
+    /**
+     * Models
+     */
 
     Backbone.searchGoogle = Backbone.Model.extend({
         url: function() {
@@ -258,7 +265,9 @@
         }
     });
 
-    // Collections
+    /**
+     * Collections
+     */
 
 
     Backbone.Brewery_Collection = Backbone.Collection.extend({
