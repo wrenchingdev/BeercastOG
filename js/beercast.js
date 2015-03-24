@@ -29,6 +29,7 @@
             this.searchNear = new Backbone.SearchNearView();
             // Search View
             this.search = new Backbone.SearchView();
+            console.log(this.search)
 
             debugger;
             // New instance of google search model
@@ -58,7 +59,6 @@
             }.bind(this));
             //=====================================================
 
-
             // Header View
             this.header = new Backbone.HeaderView();
             // Rendering out Header View (doesn't need to render multiple times)
@@ -73,7 +73,7 @@
             // '/brewery/:id/beers': 'beers',
             'search': 'search',
             'searchNear': 'searchNear',
-            '*default': 'search'//'home'
+            '*default': 'home'
         },
         home: function() {
             this.home.render();
@@ -86,22 +86,22 @@
             //
         },
         search: function(terms) {
-            this.google.fetch().then(function(data) {
+            console.log('Fetching Google data')
+            this.google.fetch().then(function(coords) {
                 console.log('Google Fetch done!')
-                console.log('lat', data.results[0].geometry.location.lat)
-                console.log('lng', data.results[0].geometry.location.lng)
+                    //console.log('lat', coords.results[0].geometry.location.lat)
+                    //console.log('lng', coords.results[0].geometry.location.lng)
                 this.searchBrewCollection = new Backbone.Brewery_Collection({
-                    latitude: data.results[0].geometry.location.lat,
-                    longitude: data.results[0].geometry.location.lng
-                })
-                debugger;
+                    latitude: coords.results[0].geometry.location.lat,
+                    longitude: coords.results[0].geometry.location.lng
+                });
+                this.searchBrewCollection = new Backbone.Brewery_Collection(coords);
                 // attach SearchView to searchBrewCollection (Brewery_Collection)
                 this.search.collection = this.searchBrewCollection;
-                this.searchBrewCollection.fetch().then(function(data) {
-                    console.log(data)
-                })
-                this.search.render();
-            })
+                this.searchBrewCollection.fetch().then(function(d) {
+                    this.search.render();
+                }.bind(this))
+            }.bind(this))
         },
         searchNear: function(latLong) {
             this.isBrewCollection.then(function() {
@@ -211,7 +211,7 @@
             ].join('')
         },
         parse: function(data) {
-            console.log(data.results[0].geometry.location)
+            console.log('Google results= ', data.results[0].geometry.location.lat, data.results[0].geometry.location.lng)
             return data.results[0].geometry.location
         }
     });
@@ -275,23 +275,27 @@
         breweryDBKey: "3c52864e7f15341096384bb8a92262da",
         initialize: function(options) {
             this.options = options;
+            debugger;
         },
         url: function() {
-
-            return [
+            debugger;
+            console.log('Brewery search initialized')
+            var url = [
                 '/brewerydb/search',
                 '?key=',
                 this.breweryDBKey,
                 "&lat=",
-                this.options.latitude,
+                this.options.results[0].geometry.location.lat,
                 "&lng=",
-                this.options.longitude,
+                this.options.results[0].geometry.location.lng,
                 "&radius=40"
             ].join('')
+            return url
         },
         parse: function(data) {
-            console.log(data)
-            return data
+            console.log(data.data)
+            debugger;
+            return data.data
         }
     });
 
