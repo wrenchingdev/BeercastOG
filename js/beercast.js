@@ -3,158 +3,139 @@
     "use strict";
 
     /**
-     * Router
+     * Router =============================================
      */
 
     Backbone.BeerRouter = Backbone.Router.extend({
 
         initialize: function() {
 
-            // Home View
-            this.home = new Backbone.HomeView();
-            // About View
-            this.about = new Backbone.AboutView();
-
-            // forecastModel is an option to details view
+            //Models & Collections
+            this.geoRequest = new Backbone.GeoModel();
+            this.googleSearch = new Backbone.GoogleSearch();
             this.forecastModel = new Backbone.WeatherModel();
+            this.breweryCollectionNear = new Backbone.BreweryCollection();
+            this.breweryCollectionSearch = new Backbone.BreweryCollection();
 
-            // Details View
-            this.details = new Backbone.DetailedView();
-            // Weather View (Inside Details View)
-            this.weather = new Backbone.WeatherView({
+            //Views
+            this.headerView = new Backbone.HeaderView();
+            this.homeView = new Backbone.HomeView();
+            this.aboutView = new Backbone.AboutView();
+            this.searchCityView = new Backbone.SearchCityView();
+            this.searchNearView = new Backbone.SearchNearView();
+            this.detailsView = new Backbone.DetailsView();
+            this.weatherView = new Backbone.WeatherView({
                 forecast: this.forecastModel
             });
+            // this.detailsNearView = new Backbone.DetailsNearView();
 
-            // Search Near View
-            this.searchNear = new Backbone.SearchNearView();
-            // Search View
-            this.search = new Backbone.SearchView();
-            console.log(this.search)
 
-            debugger;
-            // New instance of google search model
-            this.google = new Backbone.searchGoogle();
-
-            // this.searchBrewCollection.fetch().then(function(results) {
-            //     console.log(results)
-            // }.bind(this))
-
-            // Creating new instance of geomodel
-            this.whereAmI = new Backbone.GeoModel();
-
-            //==============================================
-            // Creating a brewery collection promise
-            this.isBrewCollection = $.Deferred();
-            // Calling geo function from Geomodel
-            this.whereAmI.geo().then(function(latLong) {
-
-                //latLong exists, now need to pass over to fetch.
-                // TODO: add in geolocation (radius, too)
-                this.brewCollection = new Backbone.Brewery_Collection(latLong)
-                    // console.log(this.brewCollection)
-                    // attach SearchNearView to brew collection
-                this.searchNear.collection = this.brewCollection;
-                // once brew collection pulls in breweries nearby, resolve
-                this.isBrewCollection.resolve();
-            }.bind(this));
-            //=====================================================
-
-            // Header View
-            this.header = new Backbone.HeaderView();
-            // Rendering out Header View (doesn't need to render multiple times)
-            this.header.render();
+            // Because i want the header to render on initial page load, not EVERY page
+            this.headerView.render();
 
             Backbone.history.start();
         },
-
         routes: {
             'about': 'about',
             'details/:id': 'details',
+            // 'detailsNear/:id': 'detailsNear',
             // '/brewery/:id/beers': 'beers',
-            'search': 'search',
+            'searchCity': 'searchCity',
             'searchNear': 'searchNear',
             '*default': 'home'
         },
         home: function() {
-            this.home.render();
-            //
-            //
+            this.homeView.render();
         },
         about: function() {
-            this.about.render();
-            //
-            //
+            this.aboutView.render();
         },
-        search: function(terms) {
-            console.log('Fetching Google data')
-            this.google.fetch().then(function(coords) {
-                console.log('Google Fetch done!')
-                    //console.log('lat', coords.results[0].geometry.location.lat)
-                    //console.log('lng', coords.results[0].geometry.location.lng)
-                this.searchBrewCollection = new Backbone.Brewery_Collection({
-                    latitude: coords.results[0].geometry.location.lat,
-                    longitude: coords.results[0].geometry.location.lng
-                });
-                this.searchBrewCollection = new Backbone.Brewery_Collection(coords);
-                // attach SearchView to searchBrewCollection (Brewery_Collection)
-                this.search.collection = this.searchBrewCollection;
-                this.searchBrewCollection.fetch().then(function(d) {
-                    this.search.render();
-                }.bind(this))
-            }.bind(this))
+        searchCity: function() {
+            console.log('Search Other City Command Initialized')
+            self = this;
+            this.googleSearch.fetch().then(function(coords) {
+                console.log(coords)
+                this.breweryCollectionSearch = new Backbone.BreweryCollection()
+
+                self.breweryCollectionSearch.myLat = coords.results[0].geometry.location.lat
+                self.breweryCollectionSearch.myLong = coords.results[0].geometry.location.lng
+                debugger;
+                console.log(self.breweryCollectionSearch)
+
+                debugger;
+                self.breweryCollectionSearch.fetch().then(function(searchBreweriesReturned) {
+                    console.log(searchBreweriesReturned)
+                    var searchBreweriesArray = searchBreweriesReturned.data
+                    console.log(searchBreweriesReturned.data)
+                    self.searchCityView.collection = searchBreweriesArray
+                    self.searchCityView.render();
+                })
+
+            })
         },
-        searchNear: function(latLong) {
-            this.isBrewCollection.then(function() {
-                this.brewCollection.fetch(latLong).then(function() {
-                    this.searchNear.render();
+        searchNear: function() {
+            var self = this
+
+            this.geoRequest.getGeoLoc().then(function(geoData) {
+
+                this.breweryCollectionNear = new Backbone.BreweryCollection()
+                this.breweryCollectionNear.myLat = geoData.latitude
+                this.breweryCollectionNear.myLong = geoData.longitude
+
+                this.breweryCollectionNear.fetch().then(function(localBreweriesReturned) {
+
+                    console.log(localBreweriesReturned)
+                    var localBreweriesArray = localBreweriesReturned.data
+                    this.searchNearView.collection = localBreweriesArray
+                    this.searchNearView.render();
                 }.bind(this))
+
             }.bind(this))
         },
         details: function(id) {
-            var self = this;
-            this.isBrewCollection.then(function(d) {
-                // get the brewery associated with the id passed in from the router
-                var brewery = this.brewCollection.get(id)
-                    // store the new model on the view
-                this.details.model = brewery
-                this.details.render();
+            var model = new Backbone.BreweryModel({
+                id: id
+            })
+            var self = this
 
-                // tell the forecast to update lat/long
+            model.fetch().then(function() {
+                self.detailsView.model = model
+                self.detailsView.render();
+
                 this.forecastModel.set({
-                        lat: brewery.get('latitude'),
-                        long: brewery.get('longitude')
-                    })
-                    // tell the forecast to pull latest weather
+                    lat: model.get('locations')[0].latitude,
+                    long: model.get('locations')[0].longitude
+                })
+
+                // tell the forecast to pull latest weather
                 this.forecastModel.fetch().then(function(data) {
                     // and finally render when that data is retrieved
                     var onDom = document.querySelector('.weather')
-                    this.weather.el = this.details.el.querySelector('.weather')
-                    this.weather.render();
+                    this.weatherView.el = this.detailsView.el.querySelector('.weather')
+                    this.weatherView.render();
                 }.bind(this))
             }.bind(this))
         }
     });
 
+
     /**
-     * Views
+     * views ==============================================
      */
+
 
     Backbone.HeaderView = Backbone.TemplateView.extend({
         el: ".header",
         view: "header",
         events: {
-            "submit #submitForm": "submit",
-            "click .home": "*default",
-            "click .search": "search",
-            "click .contact": "contact"
+            "submit #submitForm": "submit"
         },
-
         submit: function(e) {
             e.preventDefault()
             this.options.user.set({
                 query: this.el.querySelector('input[name="searchBar"]').value
             })
-        },
+        }
     });
 
     Backbone.HomeView = Backbone.TemplateView.extend({
@@ -163,21 +144,15 @@
         events: {
             "click .enter": "searchNear"
         },
-
         searchNear: function(e) {
             e.preventDefault();
-            window.location.hash = "searchNear"
+            window.location.hash = "/searchNear"
         }
     });
 
-    Backbone.AboutView = Backbone.TemplateView.extend({
+    Backbone.SearchCityView = Backbone.TemplateView.extend({
         el: ".main",
-        view: "about"
-    });
-
-    Backbone.SearchView = Backbone.TemplateView.extend({
-        el: ".main",
-        view: "search"
+        view: "searchCity"
     });
 
     Backbone.SearchNearView = Backbone.TemplateView.extend({
@@ -185,21 +160,54 @@
         view: "searchNear"
     });
 
-    Backbone.DetailedView = Backbone.TemplateView.extend({
+    Backbone.DetailsView = Backbone.TemplateView.extend({
         el: ".main",
         view: "details"
     });
+
+    // Backbone.DetailsNearView = Backbone.TemplateView.extend({
+    //     el: ".main",
+    //     view: "detailsNear"
+    // });
 
     Backbone.WeatherView = Backbone.TemplateView.extend({
         el: ".weather",
         view: "weather"
     });
 
+    Backbone.AboutView = Backbone.TemplateView.extend({
+        el: ".main",
+        view: "about"
+    });
+
     /**
-     * Models
+     * Models =============================================
      */
 
-    Backbone.searchGoogle = Backbone.Model.extend({
+    Backbone.GeoModel = Backbone.Model.extend({
+        getGeoLoc: function() {
+            var geoX = $.Deferred();
+            var self = this;
+
+            navigator.geolocation.getCurrentPosition(function(position) {
+
+                    geoX.resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                },
+                function(e) {
+                    x.fail(e)
+                }, {
+                    timeout: 12000, //12s
+                    maximumAge: 10 * 60 * 1000 //600s, or 10m
+                });
+
+            return geoX;
+        }
+    });
+
+    Backbone.GoogleSearch = Backbone.Model.extend({
         url: function() {
             return [
                 "https://maps.googleapis.com/maps/api/geocode/json", //"google/search",
@@ -212,11 +220,32 @@
         },
         parse: function(data) {
             console.log('Google results= ', data.results[0].geometry.location.lat, data.results[0].geometry.location.lng)
+            debugger;
             return data.results[0].geometry.location
         }
     });
 
-    Backbone.Brewery = Backbone.Model.extend({
+    Backbone.BreweryModel = Backbone.Model.extend({
+        breweryDBKey: "3c52864e7f15341096384bb8a92262da",
+
+        url: function() {
+            console.log('Brewery search initialized')
+
+            var url = [
+                '/brewerydb/details/',
+                this.id,
+                '?key=',
+                this.breweryDBKey,
+                '&withLocations=Y'
+            ].join('')
+
+            return url
+        },
+
+        parse: function(response) {
+            return response.data;
+        },
+
         validate: function(attrs) {
             if (!attrs.latitude || !attrs.longitude) {
                 return "requires a lat/long"
@@ -242,61 +271,31 @@
         }
     });
 
-    Backbone.GeoModel = Backbone.Model.extend({
-        geo: function() {
-            var x = $.Deferred();
-            var self = this;
-
-            navigator.geolocation.getCurrentPosition(function(position) {
-
-                    x.resolve({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    });
-                },
-                function(e) {
-                    x.fail(e)
-                }, {
-                    timeout: 12000, //12s
-                    maximumAge: 10 * 60 * 1000 //600s, or 10m
-                });
-
-            return x;
-        }
-    });
-
     /**
-     * Collections
+     * Collections ========================================
      */
 
-
-    Backbone.Brewery_Collection = Backbone.Collection.extend({
-        model: Backbone.Brewery,
+    Backbone.BreweryCollection = Backbone.Collection.extend({
+        model: Backbone.BreweryModel,
         breweryDBKey: "3c52864e7f15341096384bb8a92262da",
-        initialize: function(options) {
-            this.options = options;
-            debugger;
-        },
+
         url: function() {
-            debugger;
             console.log('Brewery search initialized')
+
             var url = [
                 '/brewerydb/search',
                 '?key=',
                 this.breweryDBKey,
                 "&lat=",
-                this.options.results[0].geometry.location.lat,
+                this.myLat,
                 "&lng=",
-                this.options.results[0].geometry.location.lng,
+                this.myLong,
                 "&radius=40"
             ].join('')
+
             return url
-        },
-        parse: function(data) {
-            console.log(data.data)
-            debugger;
-            return data.data
         }
+
     });
 
 

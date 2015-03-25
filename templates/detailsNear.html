@@ -2,9 +2,8 @@
     <div class="image">
         <%
         var imageUrl = "../images/No-Image-Available.gif";
-        console.log(data)
-        if(data.get('images')){
-            imageUrl = data.get('images').large
+        if(data.get('brewery').images){
+            imageUrl = data.get('brewery').images.large
         }
         %>
         <% if(imageUrl){ %>
@@ -13,11 +12,12 @@
             </div>
         <% } %>
     </div>
-    <H1><%= data.get('name') %></H1>
+    <H1><%= data.get('brewery').name %></H1>
     <div class="description">
-        <h4>Phone Number: <%= data.get('locations')[0].phone %></h4>
+        <h4>Established: <%= data.get('brewery').established %></h4>
+        <h4>Address: <%= data.get('streetAddress') %></h4>
         <h4>Website: <a href="<%= data.get('website') %>"><%= data.get('website') %></a></h4>
-        <h4><%= data.get('description') %></h4>
+        <h4><%= data.get('brewery').description %></h4>
     </div>
 </div>
 <div class="weather">

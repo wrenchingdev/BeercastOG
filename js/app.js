@@ -29,6 +29,7 @@ function app(){
         {url: "./bower_components/pace/pace.min.js"},
         {url: "./js/TemplateView.js"},
         {url: "./js/beercast.js"}
+        // {url: "./js/oldBeercast.js"}
     ).then(function(){
         // if turning on JSnoX, uncommment the following line
         // window.d = jsnox(React);

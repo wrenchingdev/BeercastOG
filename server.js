@@ -19,8 +19,6 @@ function startServer() {
     // adds a new rule to proxy a localUrl -> webUrl
     // i.e. proxify ('/my/server/google', 'http://google.com/')
     function proxify(localUrl, webUrl){
-        console.log(localUrl)
-        console.log(webUrl)
         app.get(localUrl, function(req, res) {
             var url = [
                 webUrl,
@@ -47,6 +45,16 @@ function startServer() {
             req.params.long
         ].join('')
         req.pipe(request(url)).pipe(res);
+    })
+    // proxify('/brewerydb/details/:id', 'https://api.brewerydb.com/v2/brewery/')
+    app.get('/brewerydb/details/:id', function(req, res){
+        var url = [
+            "https://api.brewerydb.com/v2/brewery/",
+            req.params.id,
+            querify(req.query)
+        ].join('')
+
+        req.pipe(request(url)).pipe(res)
     })
 
     // all environments
