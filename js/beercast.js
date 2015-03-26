@@ -18,14 +18,16 @@
             this.breweryCollectionSearch = new Backbone.BreweryCollection();
 
             //Views
-            this.headerView = new Backbone.HeaderView();
+            this.headerView = new Backbone.HeaderView({
+                model: this.googleSearch
+            });
             this.homeView = new Backbone.HomeView();
             this.aboutView = new Backbone.AboutView();
             this.searchCityView = new Backbone.SearchCityView();
             this.searchNearView = new Backbone.SearchNearView();
             this.detailsView = new Backbone.DetailsView();
             this.weatherView = new Backbone.WeatherView({
-                forecast: this.forecastModel
+                model: this.forecastModel
             });
             // this.detailsNearView = new Backbone.DetailsNearView();
 
@@ -50,23 +52,16 @@
         about: function() {
             this.aboutView.render();
         },
-        searchCity: function() {
-            console.log('Search Other City Command Initialized')
+        searchCity: function(keywords) {
             self = this;
-            this.googleSearch.fetch().then(function(coords) {
-                console.log(coords)
+            this.googleSearch.fetch(keywords).then(function(coords) {
                 this.breweryCollectionSearch = new Backbone.BreweryCollection()
 
                 self.breweryCollectionSearch.myLat = coords.results[0].geometry.location.lat
                 self.breweryCollectionSearch.myLong = coords.results[0].geometry.location.lng
-                debugger;
-                console.log(self.breweryCollectionSearch)
 
-                debugger;
                 self.breweryCollectionSearch.fetch().then(function(searchBreweriesReturned) {
-                    console.log(searchBreweriesReturned)
                     var searchBreweriesArray = searchBreweriesReturned.data
-                    console.log(searchBreweriesReturned.data)
                     self.searchCityView.collection = searchBreweriesArray
                     self.searchCityView.render();
                 })
@@ -84,7 +79,6 @@
 
                 this.breweryCollectionNear.fetch().then(function(localBreweriesReturned) {
 
-                    console.log(localBreweriesReturned)
                     var localBreweriesArray = localBreweriesReturned.data
                     this.searchNearView.collection = localBreweriesArray
                     this.searchNearView.render();
@@ -132,9 +126,10 @@
         },
         submit: function(e) {
             e.preventDefault()
-            this.options.user.set({
+            this.model.set({
                 query: this.el.querySelector('input[name="searchBar"]').value
             })
+            window.location.hash = "/searchCity"
         }
     });
 
@@ -164,11 +159,6 @@
         el: ".main",
         view: "details"
     });
-
-    // Backbone.DetailsNearView = Backbone.TemplateView.extend({
-    //     el: ".main",
-    //     view: "detailsNear"
-    // });
 
     Backbone.WeatherView = Backbone.TemplateView.extend({
         el: ".weather",
@@ -212,15 +202,13 @@
             return [
                 "https://maps.googleapis.com/maps/api/geocode/json", //"google/search",
                 "?address=",
-                "austin",
+                this.attributes.query,
                 // "1600+Amphitheatre+Parkway,+Mountain+View,+CA",
                 "&key=",
                 "AIzaSyCtv4tcMsxiOedDJZexyPDOk8wda4OUNCY"
             ].join('')
         },
         parse: function(data) {
-            console.log('Google results= ', data.results[0].geometry.location.lat, data.results[0].geometry.location.lng)
-            debugger;
             return data.results[0].geometry.location
         }
     });
@@ -229,8 +217,6 @@
         breweryDBKey: "3c52864e7f15341096384bb8a92262da",
 
         url: function() {
-            console.log('Brewery search initialized')
-
             var url = [
                 '/brewerydb/details/',
                 this.id,
@@ -238,14 +224,11 @@
                 this.breweryDBKey,
                 '&withLocations=Y'
             ].join('')
-
             return url
         },
-
         parse: function(response) {
             return response.data;
         },
-
         validate: function(attrs) {
             if (!attrs.latitude || !attrs.longitude) {
                 return "requires a lat/long"
@@ -280,8 +263,6 @@
         breweryDBKey: "3c52864e7f15341096384bb8a92262da",
 
         url: function() {
-            console.log('Brewery search initialized')
-
             var url = [
                 '/brewerydb/search',
                 '?key=',
@@ -292,10 +273,8 @@
                 this.myLong,
                 "&radius=40"
             ].join('')
-
             return url
         }
-
     });
 
 
