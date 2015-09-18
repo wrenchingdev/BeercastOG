@@ -13,7 +13,7 @@
             //Models & Collections
             this.geoRequest = new Backbone.GeoModel();
             this.googleSearch = new Backbone.GoogleSearch();
-            this.forecastModel = new Backbone.WeatherModel();
+            // this.forecastModel = new Backbone.WeatherModel();
             this.breweryCollectionNear = new Backbone.BreweryCollection();
             this.breweryCollectionSearch = new Backbone.BreweryCollection();
 
